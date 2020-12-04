@@ -4,6 +4,7 @@ metadata:
   name: mongodb-deployment
   labels:
     app: mongodb
+    namespace: my-namespace # name of namespace
 spec:
   replicas: 1
   selector:
@@ -23,12 +24,12 @@ spec:
         - name: MONGO_INITDB_ROOT_USERNAME # name of env variable of mongodb
           valueFrom:  # valueform is used to ref external source
             secretKeyRef: # secret key reference 
-              name: mongodb-secret # name of secret
+              name: my-namespace.mongodb-secret # name of secret
               key: mongo-root-username # name of key in secret
         - name: MONGO_INITDB_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: mongodb-secret
+              name: my-namespace.mongodb-secret
               key: mongo-root-password
 
 ---
@@ -37,6 +38,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mongodb-service
+  namespace: my-namespace # name of namespace
 spec:
   selector:
     app: mongodb

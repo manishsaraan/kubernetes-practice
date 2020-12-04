@@ -3,7 +3,7 @@ kind: Deployment
 metadata: # metadata of deployment
   name: nginx-deployment
   labels:  # used by the service to match
-    name: nginx
+    app: nginx
 spec: # spec of deployment
   replicas: 3 # no of replicas of pod
   selector: # what is going to be inside the pod
@@ -18,4 +18,4 @@ spec: # spec of deployment
         - name: nginx
           image: nginx # image of container
           ports:
-            - containerPort: 8080 # port where pod will forward request
+            - containerPort: 80 # port where pod will forward request

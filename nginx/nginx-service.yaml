@@ -4,8 +4,10 @@ metadata: # metadata of service
   name: nginx-service
 spec: # spec of service
   selector:
-    name: nginx # match with lables of deployment
+    app: nginx # match with lables of deployment
+  type: LoadBalancer
   ports:
     - protocol: TCP # default to tcp
       port: 80  # external port where service will forward request
-      targetPort: 8080 # containerPort in deployment
+      targetPort: 80 # containerPort in deployment
+      nodePort: 30000

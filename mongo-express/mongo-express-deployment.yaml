@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mongo-express
+  namespace: my-namespace # name of namespace
   labels:
     app: mongo-express
 spec:
@@ -50,4 +51,4 @@ spec:
     - protocol: TCP
       port: 8081
       targetPort: 8081
-      nodePort: 30000 # port where external service will open, range (30000, 32767), it will give loadbalancer ip but internal give clusterip
+      nodePort: 30000 # port where external service will open, range (30000, 32767), it will give loadbalancer ip but internal give clusterip 

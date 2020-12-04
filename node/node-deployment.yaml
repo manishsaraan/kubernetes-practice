@@ -2,20 +2,20 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: k8-node-deployment
+  labels:
+    app: k8-node-deployment
 spec:
-  replicas: 4
+  replicas: 2
   selector:
     matchLabels:
-      type: k8-node-deployment
-      service: k8-node
+      app: k8-node-deployment
   template:
     metadata:
       labels:
-        type: k8-node-deployment
-        service: k8-node
+        app: k8-node-deployment
     spec:
       containers:
-        - name: k8-node
-          image: k8-node:1.0
+        - name: k8-node-deployment
+          image: manishsaraan/k8-node:1.2
           ports:
             - containerPort: 3000
