@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-express
+  labels:
+    app: mongo-express
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo-express
+  template:
+    metadata:
+      labels:
+        app: mongo-express
+    spec:
+      containers:
+      - name: mongo-express
+        image: mongo-express
+        ports:
+        - containerPort: 8081
+        env:
+        - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+          valueFrom:  # valueform is used to ref external source
+              secretKeyRef: # secret key reference 
+                name: mongodb-secret # name of secret
+                key: mongo-root-username # name of key in secret
+        - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+          valueFrom:  # valueform is used to ref external source
+              secretKeyRef: # secret key reference 
+                name: mongodb-secret # name of secret
+                key: mongo-root-password # name of key in secret
+        - name: ME_CONFIG_MONGODB_SERVER
+          valueFrom:  # valueform is used to ref external source
+              configMapKeyRef: # configmap key reference 
+                name: mongodb-configmap # name of config map
+                key: database_url # name of key in config map
+              
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-express-service
+spec:
+  selector:
+    app: mongo-express
+  type: LoadBalancer # make it an external service 
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081
+      nodePort: 30000 # port where external service will open, range (30000, 32767), it will give loadbalancer ip but internal give clusterip

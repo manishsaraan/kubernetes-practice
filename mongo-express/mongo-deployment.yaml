@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb-deployment
+  labels:
+    app: mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: mongo:3.6
+        ports: # which ports i want to expose
+        - containerPort: 27017
+        env: 
+        - name: MONGO_INITDB_ROOT_USERNAME # name of env variable of mongodb
+          valueFrom:  # valueform is used to ref external source
+            secretKeyRef: # secret key reference 
+              name: mongodb-secret # name of secret
+              key: mongo-root-username # name of key in secret
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongo-root-password
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-service
+spec:
+  selector:
+    app: mongodb
+  ports:
+    - protocol: TCP
+      port: 27017 # expose port
+      targetPort: 27017 # container port in deployment
+# After deployment verify that ip of the service is same as of the pods by -o wide attribute while getting pods

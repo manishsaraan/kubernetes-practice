@@ -1,0 +1,11 @@
+apiVersion: v1 # apiVersion depends upon the kind of service, do check 
+kind: Service # kind of service
+metadata: # metadata of service
+  name: nginx-service
+spec: # spec of service
+  selector:
+    name: nginx # match with lables of deployment
+  ports:
+    - protocol: TCP # default to tcp
+      port: 80  # external port where service will forward request
+      targetPort: 8080 # containerPort in deployment
