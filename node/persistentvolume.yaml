@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: my-local-pv
+  labels:
+    type: local
+spec:
+  #we use local node storage here!
+  #kubectl get storageclass
+  storageClassName: my-local-storage
+  persistentVolumeReclaimPolicy: Retain  
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  local:
+    path: /var/www/html/testing-k8/node/public/images
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - minikube
